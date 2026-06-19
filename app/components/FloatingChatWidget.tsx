@@ -354,7 +354,7 @@ export function FloatingChatWidget() {
             <textarea
               value={input}
               rows={1}
-              placeholder="Describe your technical question..."
+              placeholder="Ask your question or choose a service above..."
               onChange={(event) => setInput(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key === "Enter" && !event.shiftKey) {
