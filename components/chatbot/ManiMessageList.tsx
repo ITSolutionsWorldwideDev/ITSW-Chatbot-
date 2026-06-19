@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { type ManiChatMessage } from "@/lib/maniClient";
+import { ManiRichText } from "@/components/chatbot/ManiRichText";
 
 export function ManiMessageList({ messages }: { messages: ManiChatMessage[] }) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -26,13 +27,13 @@ export function ManiMessageList({ messages }: { messages: ManiChatMessage[] }) {
             className={`flex ${isAssistant ? "justify-start" : "justify-end"}`}
           >
             <div
-              className={`max-w-[86%] rounded-[1.6rem] border px-4 py-3 shadow-[0_12px_34px_rgba(31,56,67,0.08)] backdrop-blur-xl sm:max-w-[78%] ${
+              className={`max-w-[84%] rounded-[1.6rem] border px-4 py-3 shadow-[0_12px_34px_rgba(31,56,67,0.08)] backdrop-blur-xl sm:max-w-[74%] ${
                 isAssistant
                   ? "border-[rgba(255,255,255,0.42)] bg-[linear-gradient(180deg,rgba(255,255,255,0.74),rgba(228,240,244,0.62))] text-slate-800"
                   : "border-[rgba(56,112,129,0.28)] bg-[linear-gradient(180deg,rgba(77,142,162,0.94),rgba(46,97,115,0.92))] text-white"
               }`}
             >
-              <p className="whitespace-pre-wrap text-[0.95rem] leading-7">{message.content}</p>
+              <ManiRichText content={message.content} tone={isAssistant ? "assistant" : "user"} />
               <p
                 className={`mt-2 text-[0.7rem] font-medium ${
                   isAssistant ? "text-slate-500" : "text-cyan-50/84"
