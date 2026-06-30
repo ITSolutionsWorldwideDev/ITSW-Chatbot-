@@ -4,6 +4,8 @@ type UnknownRecord = Record<string, unknown>;
 
 function getWebhookUrl() {
   return (
+    process.env.MANI_N8N_WEBHOOK_URL ||
+    process.env.Mani_N8N_WEBHOOK_URL ||
     process.env.N8N_CHAT_WEBHOOK_URL ||
     process.env.BIBI_N8N_WEBHOOK_URL ||
     ""
@@ -11,7 +13,12 @@ function getWebhookUrl() {
 }
 
 function getTimeoutMs() {
-  const raw = process.env.BIBI_N8N_TIMEOUT_MS || process.env.N8N_CHAT_TIMEOUT_MS || "25000";
+  const raw =
+    process.env.MANI_N8N_TIMEOUT_MS ||
+    process.env.Mani_N8N_TIMEOUT_MS ||
+    process.env.BIBI_N8N_TIMEOUT_MS ||
+    process.env.N8N_CHAT_TIMEOUT_MS ||
+    "25000";
   const parsed = Number(raw);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 25000;
 }
@@ -91,7 +98,10 @@ export async function POST(request: NextRequest) {
 
   if (!webhookUrl) {
     return NextResponse.json(
-      { error: "Missing n8n webhook URL. Set N8N_CHAT_WEBHOOK_URL or BIBI_N8N_WEBHOOK_URL." },
+      {
+        error:
+          "Missing n8n webhook URL. Set MANI_N8N_WEBHOOK_URL, N8N_CHAT_WEBHOOK_URL, or BIBI_N8N_WEBHOOK_URL.",
+      },
       { status: 500 },
     );
   }
