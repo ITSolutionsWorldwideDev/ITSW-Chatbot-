@@ -85,6 +85,7 @@ function parseBlock(block: string): RichBlock[] {
   const lines = block
     .split("\n")
     .map((line) => cleanInlineSpacing(line))
+    .filter((line) => !isMarkdownDividerLine(line))
     .filter(Boolean);
 
   if (lines.length === 0) return [];
@@ -182,6 +183,10 @@ function parseMarkdownHeadingLine(line: string): RichBlock | null {
     type: "heading",
     content: cleanInlineSpacing(match[1]),
   };
+}
+
+function isMarkdownDividerLine(line: string) {
+  return /^(?:\*{3,}|-{3,}|_{3,})$/.test(line.trim());
 }
 
 function isHeadingLine(line: string) {
