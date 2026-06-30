@@ -89,6 +89,13 @@ function parseBlock(block: string): RichBlock[] {
 
   if (lines.length === 0) return [];
 
+  if (lines.length === 1) {
+    const markdownHeading = parseMarkdownHeadingLine(lines[0]);
+    if (markdownHeading) {
+      return [markdownHeading];
+    }
+  }
+
   if (lines.length === 1 && isHeadingLine(lines[0])) {
     return [{ type: "heading", content: lines[0].slice(0, -1) }];
   }
@@ -167,6 +174,16 @@ function cleanInlineSpacing(content: string) {
     .trim();
 }
 
+function parseMarkdownHeadingLine(line: string): RichBlock | null {
+  const match = line.match(/^#{1,6}\s+(.+)$/);
+  if (!match) return null;
+
+  return {
+    type: "heading",
+    content: cleanInlineSpacing(match[1]),
+  };
+}
+
 function isHeadingLine(line: string) {
   return line.endsWith(":") && line.length <= 60 && !/^\d+[.)]/.test(line);
 }
@@ -199,6 +216,16 @@ function splitMixedLines(lines: string[]): RichBlock[] | null {
   let hasMixedContent = false;
 
   for (const line of lines) {
+    const markdownHeading = parseMarkdownHeadingLine(line);
+
+    if (markdownHeading) {
+      flushList();
+      flushParagraph();
+      blocks.push(markdownHeading);
+      hasMixedContent = true;
+      continue;
+    }
+
     const bulletMatch = line.match(/^(?:[-*]|\u2022)\s+(.+)$/);
 
     if (bulletMatch) {
